@@ -677,7 +677,7 @@ return $response;
                   $description = Data::trimString($description, 3500);
                 }
 
-                $short_description = Data::trimString($description, 800);
+                //$short_description = Data::trimString($description, 800);
                 $brand = addslashes($productArray['brand']);
                 $title = trim(addslashes($productArray['title']));
                 $maxLength = 14;
@@ -732,7 +732,7 @@ return $response;
 
                     $optiontitle=$title.'-'.$value['option_title'];
 
-                    // print_r($productUpload);die("dfyhgfgh");
+                   // print_r($value);
                     
                          $product = [
                       'sku' => $value['option_sku'],
@@ -750,7 +750,8 @@ return $response;
                       'sku_override' => $productArray['sku_override'],
                       'id_override' => $productArray['product_id_override'],
                       'shipping' => "0.0",
-                      'size'=>$value['option_title'], // 'tax_code' => $tax_code,
+                      'size'=>$value['variant_option1'],
+                      'color'=>$value['variant_option1'], // 'tax_code' => $tax_code,
                       'brand' => $brand,
                       'images' => $productArray['image'],
                       'variantGroupId' => $variantGroupId,

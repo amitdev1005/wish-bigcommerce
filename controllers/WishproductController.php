@@ -429,12 +429,13 @@ public function actionSaveDescription()
         }
         $connection = Yii::$app->getDb();
         $model = WishProduct::find()->joinWith('jet_product')->where(['wish_product.product_id'=>$id])->andWhere(['wish_product.merchant_id'=>MERCHANT_ID])->one();
+      
         $data = array();
         $sku = $model->jet_product->sku;
         $merchant_id = $model->merchant_id;
-
+        //print_r($model);die("vvf");
         //print_r(Yii::$app->request->post());die;
-
+        
         if (Yii::$app->request->post()) {
             /*-------------------newly added on 1 April starts----------------------------------*/
             $product_barcode = "";
@@ -460,6 +461,7 @@ public function actionSaveDescription()
             $product_self = trim($_POST['JetProduct']['self_description']);
             $category = "";
             $category = trim($_POST['JetProduct']['fulfillment_node']);
+            //print_r($product_sku);die("fdgdg");
             if ($product_vendor == "") {
                 $return_status['error'] = "Brand is required field.";
                 return json_encode($return_status);
@@ -472,6 +474,7 @@ public function actionSaveDescription()
 
             if ($product_barcode == "") {
                 $product_barcode = Jetproductinfo::checkUpcType($product_upc);
+
             }
 
             /* Code By Himanshu Start */
@@ -552,9 +555,11 @@ public function actionSaveDescription()
                             $opt_upc = trim($v_opt['upc']);
                             $option_sku = $v_opt['optionsku'];
                             $opt_barcode = "";
+
                             /*-------newly added on 1 April starts------------*/
                             if ($opt_barcode == "") {
                                 $opt_barcode = Jetproductinfo::checkUpcType($opt_upc);
+
                             }
                             $upc_success_flag = true;
                             $mpn_success_flag = true;
@@ -572,7 +577,9 @@ public function actionSaveDescription()
                             $skipCategory = ['Jewelry', 'Rings'];
                             if (!empty($category_id) && !in_array($category_id, $skipCategory)) {
                                 if (isset($opt_upc) && !empty($opt_upc)) {
+
                                     $var = Data::validateUpc($opt_upc);
+
                                     if ($var == true) {
                                         $invalid_upc = false;
                                     } else {
@@ -583,14 +590,18 @@ public function actionSaveDescription()
                                 /*if (strlen($opt_upc) > 0) {
                                     list($upc_success_flag, $upc_error_msg) = Jetproductinfo::checkProductOptionBarcodeOnUpdate($other_vari_opt, $v_opt, $k_opt_id, $opt_barcode, $product_barcode, $product_upc, $product_id, $product_sku, $connection);
                                 }*/
+
                                 $validate = Jetproductinfo::validateProductBarcode($opt_upc, $option_id, $merchant_id);
                                 // print_r($validate);die();
                                 if ($opt_upc == "" || !is_numeric($opt_upc) || (is_numeric($opt_upc) && !$opt_barcode) || (is_numeric($opt_upc) && $opt_barcode && !$validate)) {
+                                    
                                     $invalid_upc = true;
                                 }
 
                                 if ($invalid_upc) {
+                                 
                                     $chek_flag = true;
+                                    
                                     unset($other_vari_opt[$option_id]['upc']);
                                     $product_error['invalid_asin'][] = $option_sku;
                                 }
@@ -610,7 +621,9 @@ public function actionSaveDescription()
                         unset($product_error);
                         //return json_encode($return_status);
                     }*/
+
                 } else {
+                    
                     $upc_success_flag = false;
                     $asin_success_flag = false;
                     $mpn_success_flag = false;
@@ -640,6 +653,7 @@ public function actionSaveDescription()
 
                         if (strlen($product_upc) > 0) {
                             $upc_success_flag = Jetproductinfo::checkUpcVariantSimple($product_upc, $product_id, $product_sku, $connection);
+
                         }
                         if ($product_upc == "" || !is_numeric($product_upc) || (is_numeric($product_upc) && $type = "") || (is_numeric($product_upc) && $type && $upc_success_flag)) {
                             $invalid_upc = true;
@@ -658,14 +672,19 @@ public function actionSaveDescription()
                     /*-------------check asin and upc for variant-simple here ends----------*/
                 }
                 if ($walmart_attributes) {
+
                     foreach ($walmart_attributes as $attr_id => $value_arr) {
+                        //print_r($walmart_attributes);die;
                         $flag = false;
                         if (is_array($value_arr) && count($value_arr) > 0) {
                             $walmart_attr_id = "";
                             foreach ($value_arr as $val_key => $chd_arr) {
+                                 //print_r($value_arr);die("dsfsdf");
                                 if ($val_key == "jet_attr_id" && trim($chd_arr) == "") {
+
                                     $flag = true;
                                     foreach ($value_arr as $v_key => $c_ar) {
+                                        //print_r($v_key);die("d00fg");
                                         if ($v_key == "jet_attr_id") {
                                             continue;
                                         } elseif ($v_key == "jet_attr_name") {
@@ -675,14 +694,19 @@ public function actionSaveDescription()
                                         }
                                     }
                                     break;
-                                } else {
+                                } 
+                                else {
+
                                     if ($val_key == "jet_attr_id") {
+                                      
                                         $str_id = "";
                                         $str_id_arr = array();
                                         $str_id = trim($chd_arr);
                                         $str_id_arr = explode(',', $str_id);
                                         $walmart_attr_id = trim($str_id_arr[0]);
+
                                     } elseif ($val_key == "jet_attr_name") {
+                                        
                                         $unit = "";
                                         $s_unit = [];
                                         if (count($attributes_of_jet) > 0 && array_key_exists($walmart_attr_id, $attributes_of_jet)) {
@@ -694,9 +718,13 @@ public function actionSaveDescription()
                                         }
                                         //$s_unit=trim($s_unit);
                                         $pro_attr[trim($chd_arr)] = $s_unit;
-                                    } elseif (is_array($chd_arr)) {
+
+                                    } 
+                                    elseif (is_array($chd_arr)) {
+
                                         //$options[$attr_id]['option_id'][]=trim($val_key);
                                         $options[trim($val_key)][$walmart_attr_id] = trim($chd_arr['value']);
+
                                         $new_options[trim($val_key)][trim($attr_id)] = trim($chd_arr['value']);
                                     }
 
@@ -714,7 +742,9 @@ public function actionSaveDescription()
                 //$connection = Yii::$app->getDb();
                 $product_id = '';
                 $product_id = trim($id);
+                //print_r($walmart_attr);die("dsfgdfg");
                 if (is_array($walmart_attr) && count($walmart_attr) > 0) {
+
                     $opt_count = 0;
                     foreach ($walmart_attr as $opt_key => $option_value) {
                         $option_id = "";
@@ -727,12 +757,15 @@ public function actionSaveDescription()
                         $opt_asin = "";
                         $opt_mpn = "";
                         $opt_sku = "";
+
                         if (is_array($other_vari_opt) && count($other_vari_opt) > 0) {
                             //$opt_price=$other_vari_opt[$option_id]['price'];
                             //$opt_qty=$other_vari_opt[$option_id]['qty'];
 
                             $opt_upc = isset($other_vari_opt[$option_id]['upc']) ? $other_vari_opt[$option_id]['upc'] : '';
+                           
                             $opt_sku = $other_vari_opt[$option_id]['optionsku'];
+                            // print_r($opt_upc);die("dfgdd");
                         }
 //                        print_r($opt_upc);
 //                        print_r($option_id);
@@ -808,13 +841,13 @@ public function actionSaveDescription()
                             $opt_upc = "";
                             $opt_asin = "";
                             $opt_mpn = "";
-                            //$opt_price=$other_vari_opt[$option_id]['price'];
-                            //$opt_qty=$other_vari_opt[$option_id]['qty'];
+                            
                             $opt_upc = $other_vari_opt[$option_id]['upc'];
                             if ($opt_sku == $product_sku) {
                                 //if(trim($opt_upc)!=""){
+                               // print_r($model->jet_product);die;
                                 $model->jet_product->upc = trim($opt_upc);
-                                $model->jet_product->vendor = trim($product_vendor);
+                                $model->jet_product->brand = trim($product_vendor);
                                 //}
                             }
                             $sql = "";
@@ -827,8 +860,11 @@ public function actionSaveDescription()
                                 option_unique_id='" . trim($opt_upc) . "',
                                 option_qty ='" . $other_vari_opt[$option_id]['walmart_product_inventory'] . "'
                                 where option_id='" . $option_id . "'";
+
                                 //$connection->createCommand($sql)->execute();
                                 Data::sqlRecords($sql, null, "update");
+                                $query2 = 'UPDATE `jet_product` SET qty ="' .$other_vari_opt[$option_id]['walmart_product_inventory'] . '"  where bigproduct_id="' . $model->product_id . '"';
+                                Data::sqlRecords($query2, null, "update");
 
                             }
                             $model3 = "";
@@ -839,7 +875,12 @@ public function actionSaveDescription()
                                 walmart_option_attributes='',
                                 option_prices =" . $other_vari_opt[$option_id]['walmart_product_price'] . "
                                 where option_id='" . $option_id . "'";
+                        
                                 Data::sqlRecords($sql, null, "update");
+                                $query2 = 'UPDATE `wish_product` SET product_price ="' .$other_vari_opt[$option_id]['walmart_product_price'] . '"  where product_id="' . $model->product_id . '"';
+                                Data::sqlRecords($query2, null, "update");
+                                 //print_r($query2);die;
+
                                 //$connection->createCommand($sql)->execute();
                             }
                             $opt_count++;

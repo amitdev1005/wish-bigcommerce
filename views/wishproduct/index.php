@@ -298,13 +298,14 @@ $saveVariantImageUrl= yii\helpers\Url::toRoute(['wishproduct/changevariantimage'
 
                             if (!empty($value)) {
                                 //return Html::renderTagAttributes($value);
-                                $status = ['Items Processing', 'Not Uploaded', 'PUBLISHED', 'STAGE', 'UNPUBLISHED'];
+                                $status = ['Items Processing', 'Not Uploaded', 'APPROVED', 'PENDING', 'REJECTED'];
                                 $html1 = '';
                                 $html1 .= '<ul>';
                                 foreach ($value as $key => $val) {
-                                    if (empty($key) || !in_array($key, $status)) {
-                                        $key = 'Others';
-                                    }
+                                    //print_r($key);die("fgh");
+                                    // if (empty($key) || !in_array($key, $status)) {
+                                    //     $key = 'Others';
+                                    // }
                                     $html1 .= '<li class="' . $key . '">' . $key . ' : ' . $val . '</li>';
                                 }
                                 $html1 .= '</ul>';

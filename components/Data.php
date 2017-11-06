@@ -766,7 +766,7 @@ class Data extends component
      */
     public static function validateUpc($barcode)
     {
-       
+     
         if (preg_match('/[^0-9]/', $barcode)) {
             // is not numeric
             return false;
@@ -808,7 +808,7 @@ class Data extends component
         $check = (10 - ($sum % 10)) % 10;
         // evaluate check digit
         $last = (int)($barcode[13]);
-
+      
        
         return $check == $last;
     }

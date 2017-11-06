@@ -679,7 +679,7 @@ if (is_array($attributes) && count($attributes) > 0) {
                                 </div>
                                 <div class="pull-left">
                                     <button class="toggle_editor walmart-price-button" type="button"
-                                            onClick="walmartPrice(this,event);" title="Upload On Wish"
+                                            onClick="wishPrice(this,event);" title="Upload On Wish"
                                             product-id="<?= $model->product_id ?>" product-type="<?= 'variants' ?>"
                                             option-id="<?= $value['option_id'] ?>" sku="<?= $value['option_sku'] ?>"
                                             option-price="<?= (float)$value['option_price']; ?>">Update
@@ -711,7 +711,7 @@ if (is_array($attributes) && count($attributes) > 0) {
                                 </div>
                                 <div class="pull-left">
                                     <button class="toggle_editor walmart-inventory-button" type="button"
-                                            onClick="walmartInventorymodal(this);" title="Upload On Wish"
+                                            onClick="wishInventory(this);" title="Upload On Wish"
                                             product-id="<?= $model->product_id ?>" product-type="<?= 'variants' ?>"
                                             option-id="<?= $value['option_id'] ?>" sku="<?= $value['option_sku'] ?>"
                                             option-inventory="<?= (float)$value['option_qty'] ?>"
